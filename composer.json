@@ -1,0 +1,30 @@
+{
+  "name": "rezonans/rezonans-core",
+  "description": "The core package of the Rezonans, provide implementation of main functionality",
+  "authors": [
+    {
+      "name": "Alexandr Shevchenko",
+      "email": "ls.shov@gmail.com"
+    }
+  ],
+  "license": "BSD-2-Clause",
+  "require": {
+    "php": ">=7.1",
+    "pug-php/pug": "^3.1",
+    "monolog/monolog": "^1.23",
+    "symfony/var-dumper": "^4.0",
+    "symfony/http-foundation": "^4.0",
+    "mustache/mustache": "^2.12",
+    "symfony/dotenv": "^4.0",
+    "symfony/filesystem": "^4.0",
+    "illuminate/container": "^5.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Rezonans\\Core\\": "."
+    }
+  }
+}
