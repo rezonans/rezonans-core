@@ -19,31 +19,34 @@ class Path
     /**
      * @var string
      */
-    protected $core;
+    protected $corePath;
 
     /** @var WpProvider */
     protected $wpProvider;
 
     /**
      * Path constructor.
-     * @param string $root
-     * @param string $core
-     * @throws \Exception
+     * @param string $corePath
      * @throws \Error
+     * @throws \Exception
      */
-    public function __construct(string $root, string $core)
+    public function __construct(string $corePath)
     {
         $this->wpProvider = Core::get(WpProvider::class);
 
-        if(empty($root) || !is_dir($root)) {
+        if(!defined('REZONANS_ROOT')) {
+            throw new \Exception("REZONANS_ROOT not defined!");
+        }
+
+        if(!is_dir(REZONANS_ROOT)) {
             throw new \Exception("Invalid root dir");
         }
-        $this->root = $root;
+        $this->root = REZONANS_ROOT;
 
-        if(empty($core) || !is_dir($core)) {
+        if(empty($corePath) || !is_dir($corePath)) {
             throw new \Exception("Invalid core dir");
         }
-        $this->core = $core;
+        $this->corePath = $corePath;
     }
 
     /**
@@ -91,7 +94,7 @@ class Path
      */
     public function getCorePath(string $tail = ''): string
     {
-        return $this->core;
+        return $this->corePath;
     }
 
     /**

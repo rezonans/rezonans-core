@@ -9,7 +9,6 @@ use Rezonans\Core\Flow\ContainerManager;
  * The facade for @see \Rezonans\Core\Core
  *
  * @method static ContainerManager getContainerManager()
- * @method static null|mixed env(string $var, $default = null)
  */
 class Core extends AbstractFacade
 {

@@ -33,10 +33,6 @@ abstract class AbstractApp implements AppInterface
     {
         $this->core = $core;
 
-        $this->setPath();
-        $this->setUpEnvironment();
-        $this->setUpServices();
-
         if(!is_null($this->beforeRun)) {
             call_user_func_array($this->beforeRun, [$this->core]);
         }
@@ -59,50 +55,4 @@ abstract class AbstractApp implements AppInterface
      * Waiting for the core who call it at the time
      */
     abstract public function run();
-
-    /**
-     * Set the Path, important method, call it before any another one
-     */
-    protected function setPath()
-    {
-        $this->core
-            ->setPath($this->appRoot);
-    }
-
-    /**
-     * Load .env if it set and merge with environment
-     */
-    protected function setUpEnvironment()
-    {
-        $dotEnv = new Dotenv();
-        $dotEnv->populate($this->getEnvironmentVars());
-
-        $envFilePath = Path::getProjectRoot('/.env');
-        if (is_readable($envFilePath)) {
-            $dotEnv->load($envFilePath);
-        }
-
-        $errorLogFile = getenv('ERROR_LOG');
-
-        /**
-         * Wordpress use it to log down self errors
-         */
-        ini_set('error_log',Path::getProjectRoot($errorLogFile));
-    }
-
-    protected function setUpServices()
-    {
-        //
-    }
-
-    /**
-     * Redefine with your default env loader
-     * @return array
-     */
-    protected function getEnvironmentVars(): array
-    {
-        return [
-            'ERROR_LOG' => '/error.log.wp.txt',
-        ];
-    }
 }

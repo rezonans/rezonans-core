@@ -204,7 +204,7 @@ class RezonansQueryTest extends TestCase
 
         $path = new class() extends Path
         {
-            public function __construct(string $root = '', string $core = '')
+            public function __construct(string $core = '')
             {
 
             }

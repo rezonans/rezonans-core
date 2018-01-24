@@ -26,6 +26,10 @@ class TestCase extends BaseTestCase
         if(!defined('ABSPATH')) {
             define('ABSPATH', '');
         }
+
+        if(!defined('REZONANS_ROOT')) {
+            define('REZONANS_ROOT', __DIR__);
+        }
     }
 
     public function setUp()
