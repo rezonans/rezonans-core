@@ -17,6 +17,7 @@ class AppTest extends TestCase
      */
     public function emulateRun()
     {
+        //Arrange
         $phpMockWpAddAction = <<<'CODE'
             function add_action()
             {
@@ -38,41 +39,24 @@ CODE;
             }
         };
 
-        //Arrange
-        (new class ('', $pmMock) extends AbstractApp
+        (new class ('') extends AbstractApp
         {
-            protected $pmMock;
-
-            public function __construct(string $appRoot, $pmMock)
+            public function __construct(string $appRoot)
             {
-                $this->pmMock = $pmMock;
                 parent::__construct($appRoot);
             }
 
-            protected function setPath()
+            public function handle(\Rezonans\Core\Core $core)
             {
-                /** @var Container $cb */
-                $cb = $this->core->getContainerManager()->getContainer();
-                $cb->instance(PromiseManager::class, $this->pmMock);
-            }
-
-            protected function setUpEnvironment()
-            {
-                //do nothing
-            }
-
-            protected function setUpServices()
-            {
-                //do nothing
+                parent::handle($core);
             }
 
             public function run()
-            {
-                /** @var PromiseManager $pm */
+            {   /** @var PromiseManager $pm */
                 $pm = Core::get(PromiseManager::class);
                 $pm->addPromise('GoingTest', 'assert');
             }
-        })->beforeRun(function (\Rezonans\Core\Core $core) {
+        })->beforeRun(function (\Rezonans\Core\Core $core) use ($pmMock) {
 
             $core->setLogger(new class('test') extends Logger
             {
@@ -81,6 +65,10 @@ CODE;
                     dump([$message]);
                 }
             });
+
+            /** @var Container $cb */
+            $cb = $this->core->getContainerManager()->getContainer();
+            $cb->instance(PromiseManager::class, $pmMock);
 
         })->handle($this->core);
 

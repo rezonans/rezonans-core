@@ -3,6 +3,7 @@
 namespace Rezonans\Core\Http;
 
 use Rezonans\Core\Contracts\ResponseInterface;
+use Rezonans\Core\Facades\Configurator;
 use Rezonans\Core\Facades\Core;
 
 /**
@@ -18,7 +19,7 @@ class ApiController extends AbstractResponder
     {
         $exceptionMarker = (2 != intval($status / 100));
 
-        if ($exceptionMarker && Core::env('TESTING')) {
+        if ($exceptionMarker && ('testing' === Configurator::env('PROJECT_ENVIRONMENT'))) {
 
             $logData = [$content, $status];
             is_null($e) ?: $logData[] = $e->getTraceAsString();

@@ -96,19 +96,6 @@ final class Core
     }
 
     /**
-     * Set path instance by App
-     * @param string $appRoot
-     */
-    public function setPath(string $appRoot)
-    {
-        $this->path = new Path($appRoot, $this->coreRoot);
-
-        $this->containerManager
-            ->getContainer()
-            ->instance(Path::class, $this->path);
-    }
-
-    /**
      * @param Logger $logger
      */
     public function setLogger(Logger $logger)
@@ -125,49 +112,10 @@ final class Core
     }
 
     /**
-     * Accessor to environment vars
-     * @param string $var
-     * @param $default
-     * @return null|mixed
-     */
-    public function env(string $var, $default = null)
-    {
-        $value = getenv($var) ?? null;
-
-        if ($value === false) {
-            return $default instanceof Closure ? $default() : $default;
-        }
-
-        switch (strtolower($value)) {
-            case 'true':
-            case '(true)':
-                return true;
-            case 'false':
-            case '(false)':
-                return false;
-            case 'empty':
-            case '(empty)':
-                return '';
-            case 'null':
-            case '(null)':
-                return null;
-        }
-
-        if (
-            strlen($value) > 1
-            && (0 === strpos($value, '"'))
-            && (strlen($value) - 1 === strpos($value, '"'))
-        ) {
-            return substr($value, 1, -1);
-        }
-
-        return $value;
-    }
-
-    /**
      * Service container inti instructions
-     * @param ContainerBuilder $container
+     * @param Container $container
      * @throws \Exception
+     * @throws \Error
      */
     protected function initServiceContainer(Container $container)
     {
@@ -189,7 +137,11 @@ final class Core
         $sr->walkDirForServices('Render');
         $sr->walkDirForServices('Wordpress');
 
+        $container->instance('core', $this);
         $container->singleton('router-store', \Rezonans\Core\Http\RouterStore::class);
         $container->instance('promise-pool.shutdown', new PromisePool());
+
+        $container->when(Path::class)->needs('$corePath')->give($this->coreRoot);
+        $container->singleton(Path::class);
     }
 }
